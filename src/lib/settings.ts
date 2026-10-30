@@ -1,3 +1,4 @@
+import type React from "react";
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import placeholderHero from "@/assets/wedding-hero.jpg.asset.json";
@@ -21,6 +22,11 @@ export type WeddingSettings = {
   invitation: Localized;
   dressCode: Localized;
   info: Localized;
+  shareWelcome: Localized;
+  uploadLimit: number;
+  uploadsEnabled: boolean;
+  rsvpEnabled: boolean;
+  theme: { accent: string; background: string; text: string; headingFont: string; animations: boolean };
 };
 
 export const DEFAULT_SETTINGS: WeddingSettings = {
@@ -48,7 +54,31 @@ export const DEFAULT_SETTINGS: WeddingSettings = {
     es: "Habrá transporte desde el centro de la ciudad a las 16:15.",
     ar: "ستنطلق الحافلات من وسط المدينة الساعة 16:15.",
   },
+  shareWelcome: {
+    en: "Capture the moments, share the memories. Scan, snap and share your favourite moments with us.",
+    es: "Captura los momentos, comparte los recuerdos. Comparte con nosotros tus momentos favoritos.",
+    ar: "التقط اللحظات وشاركنا الذكريات. شاركنا لحظاتك المفضّلة من يومنا.",
+  },
+  uploadLimit: 25,
+  uploadsEnabled: true,
+  rsvpEnabled: true,
+  theme: { accent: "#b8955a", background: "#faf6ee", text: "#55463a", headingFont: "Cormorant Garamond", animations: true },
 };
+
+export const HEADING_FONTS = ["Cormorant Garamond", "Playfair Display", "Bodoni Moda", "Marcellus", "Cinzel"];
+
+export function themeStyle(t: WeddingSettings["theme"]): React.CSSProperties {
+  return {
+    ["--gold" as string]: t.accent,
+    ["--primary" as string]: t.accent,
+    ["--ring" as string]: t.accent,
+    ["--background" as string]: t.background,
+    ["--ivory" as string]: t.background,
+    ["--foreground" as string]: t.text,
+    ["--cocoa" as string]: t.text,
+    ["--font-serif" as string]: `"${t.headingFont}", "Amiri", serif`,
+  };
+}
 
 export const PLACEHOLDER_HERO_URL = placeholderHero.url;
 
@@ -68,6 +98,8 @@ export async function fetchSettings(): Promise<LoadedSettings> {
     invitation: { ...DEFAULT_SETTINGS.invitation, ...stored.invitation },
     dressCode: { ...DEFAULT_SETTINGS.dressCode, ...stored.dressCode },
     info: { ...DEFAULT_SETTINGS.info, ...stored.info },
+    shareWelcome: { ...DEFAULT_SETTINGS.shareWelcome, ...stored.shareWelcome },
+    theme: { ...DEFAULT_SETTINGS.theme, ...stored.theme },
   };
   const heroPath = data?.hero_image_url ?? null;
   let heroUrl: string | null = null;

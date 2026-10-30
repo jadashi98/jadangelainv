@@ -14,6 +14,115 @@ export type Database = {
   }
   public: {
     Tables: {
+      download_tickets: {
+        Row: {
+          created_by: string
+          expires_at: string
+          id: string
+          photo_ids: string[] | null
+        }
+        Insert: {
+          created_by: string
+          expires_at?: string
+          id?: string
+          photo_ids?: string[] | null
+        }
+        Update: {
+          created_by?: string
+          expires_at?: string
+          id?: string
+          photo_ids?: string[] | null
+        }
+        Relationships: []
+      }
+      guest_sessions: {
+        Row: {
+          created_at: string
+          fingerprint: string | null
+          guest_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          fingerprint?: string | null
+          guest_name?: string | null
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          fingerprint?: string | null
+          guest_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      guest_tokens: {
+        Row: {
+          created_at: string
+          session_id: string
+          token_hash: string
+        }
+        Insert: {
+          created_at?: string
+          session_id: string
+          token_hash: string
+        }
+        Update: {
+          created_at?: string
+          session_id?: string
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guest_tokens_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "guest_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      photos: {
+        Row: {
+          content_type: string
+          created_at: string
+          id: string
+          original_name: string | null
+          path: string
+          session_id: string
+          size_bytes: number
+          status: string
+        }
+        Insert: {
+          content_type: string
+          created_at?: string
+          id?: string
+          original_name?: string | null
+          path: string
+          session_id: string
+          size_bytes?: number
+          status?: string
+        }
+        Update: {
+          content_type?: string
+          created_at?: string
+          id?: string
+          original_name?: string | null
+          path?: string
+          session_id?: string
+          size_bytes?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "photos_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "guest_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rsvps: {
         Row: {
           attending: boolean
@@ -92,6 +201,17 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      reserve_photo_slot: {
+        Args: {
+          _limit: number
+          _name: string
+          _path: string
+          _session: string
+          _size: number
+          _type: string
+        }
+        Returns: string
       }
     }
     Enums: {
