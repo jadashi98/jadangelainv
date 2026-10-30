@@ -69,7 +69,7 @@ function AdminPage() {
     );
 
   return (
-    <main className="min-h-screen bg-secondary/30">
+    <main dir="ltr" className="min-h-screen bg-secondary/30 font-sans">
       <header className="border-b border-gold-soft bg-card">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
           <div>

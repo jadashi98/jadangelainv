@@ -56,7 +56,7 @@ function AuthPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-secondary/40 px-4">
+    <main dir="ltr" className="flex min-h-screen items-center justify-center bg-secondary/40 px-4 font-sans">
       <div className="gold-frame w-full max-w-md bg-card p-10 text-center shadow-soft">
         <p className="eyebrow">Private</p>
         <h1 className="mt-3 font-serif text-4xl text-cocoa">
