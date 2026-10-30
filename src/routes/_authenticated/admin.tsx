@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { ImageUp, LogOut, RotateCcw, Trash2, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
-import { settingsQuery, PLACEHOLDER_HERO_URL, type WeddingSettings, type HeroMode, type LoadedSettings } from "@/lib/settings";
+import { settingsQuery, type WeddingSettings, type HeroMode, type LoadedSettings } from "@/lib/settings";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -133,15 +133,16 @@ function PhotoManager() {
   };
 
   const upload = async (file: File) => {
-    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return toast.error("Please choose a JPG, PNG or WebP photo.");
-    if (file.size > 15 * 1024 * 1024) return toast.error("Photo is larger than 15 MB.");
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) { toast.error("Please choose a JPG, PNG or WebP photo."); return; }
+    if (file.size > 15 * 1024 * 1024) { toast.error("Photo is larger than 15 MB."); return; }
     setBusy(true);
     const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
     const path = `hero/${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from("site-media").upload(path, file, { contentType: file.type });
     if (error) {
       setBusy(false);
-      return toast.error(error.message);
+      toast.error(error.message);
+      return;
     }
     const old = s.heroPath;
     await setMode("custom", path);
@@ -215,9 +216,6 @@ function PhotoManager() {
           <p className="pt-2 text-xs text-muted-foreground">
             Tip: a landscape photo of at least 1920px wide looks best. JPG, PNG or WebP, up to 15 MB.
           </p>
-          {s.heroMode !== "default" && (
-            <img src={PLACEHOLDER_HERO_URL} alt="" className="hidden" />
-          )}
         </div>
       </div>
     </Panel>

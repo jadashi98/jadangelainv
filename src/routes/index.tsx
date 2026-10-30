@@ -30,6 +30,7 @@ function Index() {
   const { data } = useQuery(settingsQuery);
   const s: LoadedSettings = data ?? { ...DEFAULT_SETTINGS, heroMode: "none", heroPath: null, heroUrl: null };
   const ready = !!data;
+  if (!ready) return <main className="min-h-screen bg-background" />;
   return (
     <main className="min-h-screen bg-background">
       <div className="fixed top-4 z-30 w-full px-4">
@@ -180,7 +181,7 @@ function Rsvp() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return toast.error(t("nameRequired"));
+    if (!name.trim()) { toast.error(t("nameRequired")); return; }
     setBusy(true);
     const { error } = await supabase.from("rsvps").insert({
       name: name.trim().slice(0, 120),
@@ -189,7 +190,7 @@ function Rsvp() {
       message: message.trim().slice(0, 1000) || null,
     });
     setBusy(false);
-    if (error) return toast.error(t("error"));
+    if (error) { toast.error(t("error")); return; }
     setDone(true);
   };
 
