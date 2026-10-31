@@ -29,33 +29,33 @@ export type WeddingSettings = {
 
 export const DEFAULT_SETTINGS: WeddingSettings = {
   heroMode: "default",
-  bride: "Angela",
-  groom: "Jad",
-  date: "2027-11-27T17:00",
-  ceremonyTime: "",
-  receptionTime: "",
-  venue: "Mas dels Doblons",
-  address: "Castellón, Spain",
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Mas+dels+Doblons+Castellon+Spain",
+  bride: "Sofia",
+  groom: "Adam",
+  date: "2027-06-12T17:00",
+  ceremonyTime: "17:00",
+  receptionTime: "19:30",
+  venue: "Château de Lumière",
+  address: "12 Allée des Roses, 06400 Cannes, France",
+  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Cannes+France",
   invitation: {
-    en: "Together with our families, we joyfully invite you to celebrate our wedding.",
+    en: "Together with their families, we joyfully invite you to celebrate our wedding.",
     es: "Junto a nuestras familias, te invitamos con alegría a celebrar nuestra boda.",
     ar: "بمشاركة عائلتينا، يسعدنا أن ندعوكم لمشاركتنا فرحة زفافنا.",
   },
   dressCode: {
-    en: "We look forward to celebrating this special day with you.",
-    es: "Tenemos muchas ganas de celebrar este día tan especial contigo.",
-    ar: "نتطلع للاحتفال بهذا اليوم المميز معكم.",
+    en: "Black tie — ivory, champagne and soft neutral tones welcome.",
+    es: "Etiqueta — se agradecen tonos marfil, champán y neutros suaves.",
+    ar: "لباس رسمي — نرحّب بدرجات العاجي والشمبانيا والألوان الهادئة.",
   },
   info: {
-    en: "",
-    es: "",
-    ar: "",
+    en: "Shuttles will depart from the town centre at 16:15.",
+    es: "Habrá transporte desde el centro de la ciudad a las 16:15.",
+    ar: "ستنطلق الحافلات من وسط المدينة الساعة 16:15.",
   },
   shareWelcome: {
-    en: "Capture the moments, share the memories. Share your favourite moments from our day with us.",
-    es: "Captura los momentos y comparte con nosotros tus recuerdos favoritos de nuestro día.",
-    ar: "التقطوا اللحظات وشاركونا أجمل ذكريات يومنا.",
+    en: "Capture the moments, share the memories. Scan, snap and share your favourite moments with us.",
+    es: "Captura los momentos, comparte los recuerdos. Comparte con nosotros tus momentos favoritos.",
+    ar: "التقط اللحظات وشاركنا الذكريات. شاركنا لحظاتك المفضّلة من يومنا.",
   },
   uploadLimit: 25,
   uploadsEnabled: true,
@@ -102,7 +102,9 @@ export async function fetchSettings(): Promise<LoadedSettings> {
   let heroUrl: string | null = null;
   if (merged.heroMode === "default") heroUrl = PLACEHOLDER_HERO_URL;
   if (merged.heroMode === "custom" && heroPath) {
-    const { data: signed } = await supabase.storage.from("site-media").createSignedUrl(heroPath, 60 * 60 * 24 * 7);
+    const { data: signed } = await supabase.storage
+      .from("site-media")
+      .createSignedUrl(heroPath, 60 * 60 * 24 * 7);
     heroUrl = signed?.signedUrl ?? null;
   }
   return { ...merged, heroPath, heroUrl };
