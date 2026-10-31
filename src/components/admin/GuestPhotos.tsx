@@ -39,7 +39,7 @@ export function UploadSettings() {
     const latest = qc.getQueryData<LoadedSettings>(settingsQuery.queryKey);
     const merged = latest ? { ...strip(latest), shareTitle: f.shareTitle, shareWelcome: f.shareWelcome, askGuestName: f.askGuestName, uploadLimit: f.uploadLimit, uploadsEnabled: f.uploadsEnabled } : f;
     const { error } = await supabase.from("site_settings").update({ data: merged as unknown as Json, updated_at: new Date().toISOString() }).eq("id", 1);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await qc.invalidateQueries({ queryKey: settingsQuery.queryKey });
     toast.success("Photo sharing settings saved.");
   };
@@ -80,7 +80,7 @@ export function UploadSettings() {
   );
 }
 
-type Row = { id: string; path: string; original_name: string | null; created_at: string; session_id: string; url?: string; guest?: string | null };
+type Row = { id: string; path: string; original_name: string | null; created_at: string; session_id: string; url?: string | undefined; guest?: string | null | undefined };
 
 export function PhotoGallery() {
   const qc = useQueryClient();
@@ -130,7 +130,7 @@ export function PhotoGallery() {
     if (!rows.length || !confirm(`Delete ${rows.length} photo(s) permanently?`)) return;
     await supabase.storage.from("wedding-photos").remove(rows.map((r) => r.path));
     const { error } = await supabase.from("photos").delete().in("id", rows.map((r) => r.id));
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setSel(new Set());
     qc.invalidateQueries({ queryKey: ["guest-photos"] });
     toast.success("Photos deleted.");

@@ -37,7 +37,7 @@ async function status(db: Awaited<ReturnType<typeof admin>>, sessionId: string, 
   const urls: { id: string; url: string }[] = [];
   if (rows.length) {
     const { data: signed } = await db.storage.from("wedding-photos").createSignedUrls(rows.map((r) => r.path), 3600);
-    signed?.forEach((s, i) => s.signedUrl && urls.push({ id: rows[i].id, url: s.signedUrl }));
+    signed?.forEach((s, i) => s.signedUrl && urls.push({ id: rows[i]!.id, url: s.signedUrl }));
   }
   return { used: rows.length, limit, photos: urls };
 }
@@ -96,7 +96,7 @@ export const confirmUpload = createServerFn({ method: "POST" })
     const { data: p } = await db.from("photos").select("path").eq("id", data.photoId).eq("session_id", sid).maybeSingle();
     if (!p) throw new Error("not_found");
     const [folder, file] = p.path.split("/");
-    const { data: list } = await db.storage.from("wedding-photos").list(folder, { search: file });
+    const { data: list } = await db.storage.from("wedding-photos").list(folder, { search: file ?? "" });
     if (!list?.some((o) => o.name === file)) throw new Error("missing_file");
     await db.from("photos").update({ status: "done" }).eq("id", data.photoId);
     return status(db, sid, limit);
