@@ -21,6 +21,8 @@ export type WeddingSettings = {
   dressCode: Localized;
   info: Localized;
   shareWelcome: Localized;
+  shareTitle: Localized;
+  askGuestName: boolean;
   uploadLimit: number;
   uploadsEnabled: boolean;
   rsvpEnabled: boolean;
@@ -57,6 +59,12 @@ export const DEFAULT_SETTINGS: WeddingSettings = {
     es: "Captura los momentos, comparte los recuerdos. Comparte con nosotros tus momentos favoritos.",
     ar: "التقط اللحظات وشاركنا الذكريات. شاركنا لحظاتك المفضّلة من يومنا.",
   },
+  shareTitle: {
+    en: "Share your photos",
+    es: "Comparte tus fotos",
+    ar: "شاركنا صورك",
+  },
+  askGuestName: true,
   uploadLimit: 25,
   uploadsEnabled: true,
   rsvpEnabled: true,
@@ -96,6 +104,7 @@ export async function fetchSettings(): Promise<LoadedSettings> {
     dressCode: { ...DEFAULT_SETTINGS.dressCode, ...stored.dressCode },
     info: { ...DEFAULT_SETTINGS.info, ...stored.info },
     shareWelcome: { ...DEFAULT_SETTINGS.shareWelcome, ...stored.shareWelcome },
+    shareTitle: { ...DEFAULT_SETTINGS.shareTitle, ...stored.shareTitle },
     theme: { ...DEFAULT_SETTINGS.theme, ...stored.theme },
   };
   const heroPath = data?.hero_image_url ?? null;
