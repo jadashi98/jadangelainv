@@ -15,6 +15,7 @@ import {
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { FloralSprig } from "@/components/wedding/Floral";
+import { UploadSettings, PhotoGallery, QrPanel } from "@/components/admin/GuestPhotos";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -86,14 +87,18 @@ function AdminPage() {
       </header>
       <div className="mx-auto max-w-5xl px-4 py-8">
         <Tabs defaultValue="photo">
-          <TabsList className="bg-card">
+          <TabsList className="h-auto flex-wrap bg-card">
             <TabsTrigger value="photo">Main photo</TabsTrigger>
             <TabsTrigger value="details">Wedding details</TabsTrigger>
             <TabsTrigger value="rsvp">RSVPs</TabsTrigger>
+            <TabsTrigger value="guest-photos">Guest photos</TabsTrigger>
+            <TabsTrigger value="qr">QR code</TabsTrigger>
           </TabsList>
           <TabsContent value="photo"><PhotoManager /></TabsContent>
           <TabsContent value="details"><DetailsEditor /></TabsContent>
           <TabsContent value="rsvp"><RsvpList /></TabsContent>
+          <TabsContent value="guest-photos"><UploadSettings /><PhotoGallery /></TabsContent>
+          <TabsContent value="qr"><QrPanel /></TabsContent>
         </Tabs>
       </div>
     </main>
